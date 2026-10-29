@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>科学展 英雄报名</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a1a2e;--red:#e63946;--yellow:#ffd23f;--blue:#1d4ed8;--cream:#fff7e0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'ZCOOL KuaiLe','PingFang SC','Microsoft YaHei',sans-serif;color:var(--ink);background:#0f172a;overflow-x:hidden}
+
+  /* ================= STAGE ================= */
+  .stage{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 16px 150px;text-align:center;overflow:hidden;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(26,26,46,.16) 1.6px, transparent 1.8px) 0 0/16px 16px,
+      linear-gradient(180deg,#38bdf8 0%,#7dd3fc 45%,#fde68a 100%)}
+  .stage.shake{animation:shake .45s}
+  @keyframes shake{0%,100%{transform:translate(0)}15%{transform:translate(-9px,5px)}30%{transform:translate(8px,-6px)}45%{transform:translate(-6px,-4px)}60%{transform:translate(6px,5px)}80%{transform:translate(-3px,2px)}}
+  .rays{position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.3) 0 6deg,transparent 6deg 16deg);animation:spin 40s linear infinite;z-index:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* parallax city (fast scroll = feeling of speed) */
+  .city{position:absolute;left:0;right:0;bottom:0;background-repeat:repeat-x;z-index:1}
+  .city.far{height:170px;opacity:.45;animation:scrollbg 14s linear infinite}
+  .city.near{height:120px;opacity:.9;animation:scrollbg 5s linear infinite}
+  @keyframes scrollbg{to{background-position-x:-700px}}
+  .cloud{position:absolute;z-index:1;width:160px;height:46px;border-radius:50px;background:#fff;opacity:.75;filter:blur(3px);animation:cloud linear infinite}
+  @keyframes cloud{from{transform:translateX(110vw)}to{transform:translateX(-300px)}}
+  /* wind streaks */
+  .wind{position:absolute;z-index:1;height:3px;border-radius:3px;left:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95));animation:wind linear infinite;opacity:.8}
+  @keyframes wind{from{transform:translateX(110vw)}to{transform:translateX(-400px)}}
+
+  /* HUD */
+  .hud{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:12px;background:rgba(15,23,42,.88);color:var(--yellow);
+       border:3px solid var(--yellow);border-radius:10px;padding:8px 14px;font-family:'Bangers','ZCOOL KuaiLe',cursive;letter-spacing:1.5px;font-size:1rem;white-space:nowrap;box-shadow:4px 4px 0 var(--ink);max-width:96vw}
+  .hud .dot{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;animation:blink .7s infinite alternate}
+  @keyframes blink{to{opacity:.25}}
+  .hud .meter{width:90px;height:10px;border:2px solid var(--yellow);border-radius:6px;overflow:hidden}
+  .hud .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#ffd23f);transition:width .25s}
+  @media(max-width:640px){.hud{font-size:.8rem;gap:8px;padding:6px 10px}.hud .meter{width:48px}}
+
+  /* content */
+  .content{position:relative;z-index:3}
+  .badge{display:inline-block;background:var(--red);color:#fff;font-family:'Bangers',cursive;letter-spacing:2px;font-size:1.2rem;padding:6px 18px;border:4px solid var(--ink);border-radius:8px;transform:rotate(-3deg);box-shadow:5px 5px 0 var(--ink);margin-bottom:18px}
+  h1{font-family:'Bangers','ZCOOL KuaiLe',cursive;font-weight:400;font-size:clamp(2.6rem,9vw,6rem);line-height:1;letter-spacing:3px;color:var(--yellow);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:6px 6px 0 var(--ink)}
+  h1 small{display:block;font-family:'ZCOOL KuaiLe',sans-serif;font-size:clamp(1.4rem,5vw,2.6rem);color:#fff;letter-spacing:6px;margin-top:10px;-webkit-text-stroke:2px var(--ink);text-shadow:4px 4px 0 var(--ink)}
+  .tagline{margin:22px auto 30px;max-width:520px;background:var(--cream);border:4px solid var(--ink);border-radius:14px;padding:12px 18px;font-size:1.15rem;box-shadow:6px 6px 0 var(--ink);transform:rotate(1deg)}
+  .cta{position:relative;display:inline-block;text-decoration:none;font-family:'Bangers','ZCOOL KuaiLe',cursive;font-size:clamp(1.6rem,5vw,2.4rem);letter-spacing:2px;color:#fff;background:var(--red);
+       padding:16px 40px;border:5px solid var(--ink);border-radius:16px;box-shadow:8px 8px 0 var(--ink);transition:transform .12s,box-shadow .12s;animation:pulse 1.4s ease-in-out infinite}
+  .cta span{font-family:'ZCOOL KuaiLe',sans-serif;font-size:.7em;margin-left:8px;letter-spacing:1px}
+  .cta:hover{transform:translate(-3px,-3px) rotate(-1deg);box-shadow:11px 11px 0 var(--ink)}
+  .cta:active{transform:translate(6px,6px);box-shadow:2px 2px 0 var(--ink)}
+  .cta.hit{animation:hit .5s}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  @keyframes hit{0%{transform:scale(1)}20%{transform:scale(.88) rotate(-4deg);background:#fb923c}50%{transform:scale(1.14) rotate(3deg)}100%{transform:scale(1)}}
+  .burst{position:absolute;z-index:2;font-family:'Bangers',cursive;font-size:1.6rem;color:var(--ink);background:var(--yellow);padding:18px 14px;animation:wob 1s ease-in-out infinite alternate;
+         clip-path:polygon(50% 0,61% 20%,82% 10%,80% 33%,100% 38%,84% 55%,98% 75%,74% 76%,70% 100%,52% 85%,32% 100%,28% 78%,2% 80%,18% 57%,0% 36%,22% 31%,20% 8%,40% 20%)}
+  .burst.b1{top:12%;left:4%}.burst.b2{bottom:24%;right:4%;background:#fb7185;animation-delay:.4s}
+  @keyframes wob{from{transform:rotate(-10deg) scale(.95)}to{transform:rotate(8deg) scale(1.1)}}
+  @media(max-width:640px){.burst{font-size:1.1rem;padding:12px 8px}}
+
+  /* ================= FLYING HEROES ================= */
+  #sky{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+  .flyer{position:absolute;left:0;top:0;will-change:transform}
+  .flip{position:relative}.flip.rev{transform:scaleX(-1)}
+  .flip svg{display:block;width:100%;height:auto;filter:drop-shadow(0 0 8px rgba(255,255,255,.9)) drop-shadow(3px 4px 0 rgba(26,26,46,.35))}
+  .streak{position:absolute;right:86%;top:28%;width:170%;height:48%;
+          background:repeating-linear-gradient(180deg,rgba(255,255,255,.95) 0 3px,transparent 3px 8px);
+          -webkit-mask:linear-gradient(90deg,transparent,#000 88%);mask:linear-gradient(90deg,transparent,#000 88%)}
+  #fx{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
+  .spark{position:absolute;width:var(--z);height:var(--z);background:var(--c);transform:translate(-50%,-50%);
+         clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:sp .65s ease-out forwards}
+  @keyframes sp{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(200deg) scale(0);opacity:0}}
+  .ghost{position:absolute;border-radius:50%;transform:translate(-50%,-50%);animation:gh .5s ease-out forwards}
+  @keyframes gh{from{opacity:.55;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
+  .ring{position:absolute;width:40px;height:40px;border:6px solid #fff;border-radius:50%;transform:translate(-50%,-50%) scale(0);animation:ring .6s ease-out forwards}
+  @keyframes ring{to{transform:translate(-50%,-50%) scale(6);opacity:0;border-width:1px}}
+  .pop{position:absolute;font-family:'Bangers','ZCOOL KuaiLe',cursive;font-size:var(--fs,2.4rem);color:var(--yellow);letter-spacing:2px;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink);
+       transform:translate(-50%,-50%) rotate(var(--r)) scale(0);animation:pop .8s ease-out forwards;white-space:nowrap}
+  @keyframes pop{15%{transform:translate(-50%,-50%) rotate(var(--r)) scale(1.3)}30%{transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-80%) rotate(var(--r)) scale(1);opacity:0}}
+  .banner{position:absolute;left:50%;top:22%;font-family:'Bangers','ZCOOL KuaiLe',cursive;font-size:clamp(1.6rem,6vw,3.4rem);color:#fff;background:var(--red);border:5px solid var(--ink);padding:6px 26px;box-shadow:7px 7px 0 var(--ink);
+          transform:translate(-50%,-50%) rotate(-4deg) scale(0);animation:banner 1.6s ease-out forwards;letter-spacing:3px;white-space:nowrap}
+  @keyframes banner{12%{transform:translate(-50%,-50%) rotate(-4deg) scale(1.2)}22%{transform:translate(-50%,-50%) rotate(-4deg) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-50%) rotate(-4deg) scale(1);opacity:0}}
+
+  /* ================= INFO ================= */
+  .info{position:relative;z-index:3;background:var(--ink);padding:48px 16px 56px;text-align:center;border-top:6px solid var(--yellow)}
+  .info h2{font-family:'Bangers','ZCOOL KuaiLe',cursive;font-weight:400;color:var(--yellow);font-size:2.2rem;letter-spacing:3px;margin-bottom:24px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:900px;margin:0 auto}
+  .card{background:var(--cream);border:4px solid var(--yellow);border-radius:14px;padding:18px;box-shadow:6px 6px 0 var(--red)}
+  .card b{display:block;font-size:1.3rem;margin-bottom:6px;color:var(--blue)}
+  footer{margin-top:32px;color:#cbd5e1;font-size:.9rem}
+
+  @media (prefers-reduced-motion:reduce){
+    .rays,.city,.cloud,.wind,.cta,.burst{animation:none}
+    #sky{position:relative;display:flex;justify-content:center;flex-wrap:wrap;gap:8px;inset:auto}
+    .flyer{position:relative}
+  }
+</style>
+</head>
+<body>
+
+<section class="stage" id="stage">
+  <div class="rays"></div>
+  <div id="bg"></div>
+  <div class="city far" id="cityFar"></div>
+  <div class="city near" id="cityNear"></div>
+
+  <div class="hud">
+    <span class="dot"></span>
+    <b id="mission">MISSION 01 · 召集小科学家</b>
+    <span class="meter"><i id="meter"></i></span>
+    <span id="count">DEPLOYED 000</span>
+  </div>
+
+  <div class="burst b1">POW!</div>
+  <div class="burst b2">ZOOM!</div>
+
+  <div class="content">
+    <div class="badge">SCIENCE FAIR 2026</div>
+    <h1>HERO ASSEMBLE!<small>科学展 · 英雄报名</small></h1>
+    <p class="tagline">小小科学家，集结！带上你的发明，成为本届科学展的超级英雄 🔬🚀</p>
+    <a id="cta" class="cta" href="#" target="_blank" rel="noopener">JOIN NOW!<span>立即报名</span></a>
+  </div>
+
+  <div id="sky"></div>
+  <div id="fx"></div>
+</section>
+
+<section class="info">
+  <h2>MISSION BRIEF</h2>
+  <div class="cards">
+    <div class="card"><b>📅 日期</b>请填写活动日期</div>
+    <div class="card"><b>📍 地点</b>请填写活动地点</div>
+    <div class="card"><b>🎒 对象</b>请填写参加对象</div>
+  </div>
+  <footer>© Science Fair · 所有角色均为原创设计</footer>
+</section>
+
+<script>
+/* ====== 只需要改这一行：换成你的 Google Form 链接 ====== */
+const FORM_URL = "https://forms.gle/YOUR_FORM_LINK";
+/* ======================================================= */
+
+const stage=document.getElementById('stage'), sky=document.getElementById('sky'), fx=document.getElementById('fx'), cta=document.getElementById('cta');
+cta.href=FORM_URL;
+const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- 原创 Q 版英雄 ---------- */
+const heroes=[
+ {suit:'#2563eb',cape:'#facc15',
+  extra:`<g transform="translate(52 50)"><circle r="3" fill="#fff"/><ellipse rx="9" ry="3.5" fill="none" stroke="#fff" stroke-width="1.6"/><ellipse rx="9" ry="3.5" fill="none" stroke="#fff" stroke-width="1.6" transform="rotate(60)"/><ellipse rx="9" ry="3.5" fill="none" stroke="#fff" stroke-width="1.6" transform="rotate(120)"/></g>`,
+  top:`<path d="M50 26Q52 6 72 8Q92 8 90 26Q70 16 50 26Z" fill="#7c2d12" stroke="#1a1a2e" stroke-width="2.5"/>`},
+ {suit:'#f97316',cape:'#ffffff',
+  extra:`<path d="M52 40L60 52L52 62L44 52Z" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>`,
+  top:`<path d="M52 24Q54 4 70 4Q88 4 88 24Z" fill="#fff" stroke="#1a1a2e" stroke-width="2.5"/><path d="M70 4L70 -4" stroke="#1a1a2e" stroke-width="3"/><circle cx="70" cy="-5" r="3.5" fill="#ef4444" stroke="#1a1a2e" stroke-width="2"/>`},
+ {suit:'#16a34a',cape:'#e2e8f0',
+  extra:`<path d="M49 42h6v6l5 10a3 3 0 0 1-3 4H47a3 3 0 0 1-3-4l5-10z" fill="#bbf7d0" stroke="#1a1a2e" stroke-width="2"/>`,
+  top:`<path d="M50 26Q50 8 70 8Q90 8 90 26Q84 14 70 16Q56 14 50 26Z" fill="#1a1a2e"/><circle cx="68" cy="30" r="7" fill="rgba(255,255,255,.4)" stroke="#1a1a2e" stroke-width="2"/><circle cx="82" cy="30" r="7" fill="rgba(255,255,255,.4)" stroke="#1a1a2e" stroke-width="2"/>`},
+ {suit:'#9333ea',cape:'#fb7185',
+  extra:`<path d="M56 40L46 52H53L49 62L60 49H53Z" fill="#fde047" stroke="#1a1a2e" stroke-width="1.8"/>`,
+  top:`<path d="M50 28L52 6L62 18L68 2L76 18L86 6L90 28Q70 16 50 28Z" fill="#fde047" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="round"/>`},
+ {suit:'#0d9488',cape:'#a78bfa',
+  extra:`<g transform="translate(52 51)"><circle r="7" fill="#fcd34d" stroke="#1a1a2e" stroke-width="2"/><circle r="2.5" fill="#1a1a2e"/><g stroke="#1a1a2e" stroke-width="3"><path d="M0-10v3M0 7v3M-10 0h3M7 0h3"/></g></g>`,
+  top:`<path d="M50 26Q52 8 70 8Q88 8 90 26Q70 18 50 26Z" fill="#94a3b8" stroke="#1a1a2e" stroke-width="2.5"/><path d="M62 9L60 0M78 9L80 0" stroke="#1a1a2e" stroke-width="2.5"/><circle cx="60" cy="-1" r="3" fill="#f43f5e"/><circle cx="80" cy="-1" r="3" fill="#f43f5e"/>`},
+ {suit:'#dc2626',cape:'#38bdf8',
+  extra:`<path d="M52 41l3 7 7 .5-5.5 4.5 2 7-6.5-4-6.5 4 2-7-5.5-4.5 7-.5z" fill="#fde047" stroke="#1a1a2e" stroke-width="1.6" stroke-linejoin="round"/>`,
+  top:`<path d="M50 26Q50 6 70 6Q92 6 90 26Q80 12 66 16Q56 18 50 26Z" fill="#1a1a2e"/>`}
+];
+function heroSVG(h){
+  const L='#1a1a2e';
+  return `<svg viewBox="0 -12 124 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M42 40Q8 28 0 58Q22 54 42 60Z" fill="${h.cape}" stroke="${L}" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M40 54L16 68L22 76L46 62Z" fill="${h.suit}" stroke="${L}" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M14 66L8 74L18 80L24 72Z" fill="${L}"/>
+    <ellipse cx="52" cy="51" rx="19" ry="13" fill="${h.suit}" stroke="${L}" stroke-width="2.5" transform="rotate(-8 52 51)"/>
+    ${h.extra}
+    <path d="M62 46L92 36" stroke="${L}" stroke-width="11" stroke-linecap="round"/>
+    <path d="M62 46L92 36" stroke="${h.suit}" stroke-width="6.5" stroke-linecap="round"/>
+    <circle cx="95" cy="35" r="6" fill="#ffd9b3" stroke="${L}" stroke-width="2.5"/>
+    <circle cx="70" cy="30" r="21" fill="#ffd9b3" stroke="${L}" stroke-width="2.5"/>
+    <rect x="51" y="23" width="38" height="13" rx="6.5" fill="${h.suit}" stroke="${L}" stroke-width="2.2"/>
+    <ellipse cx="64" cy="29.5" rx="5" ry="4.5" fill="#fff"/><ellipse cx="80" cy="29.5" rx="5" ry="4.5" fill="#fff"/>
+    <circle cx="66" cy="30" r="2.6" fill="${L}"/><circle cx="82" cy="30" r="2.6" fill="${L}"/>
+    <circle cx="59" cy="42" r="3.2" fill="#fda4af" opacity=".8"/><circle cx="85" cy="42" r="3.2" fill="#fda4af" opacity=".8"/>
+    <path d="M68 43Q74 49 80 43" fill="none" stroke="${L}" stroke-width="2.4" stroke-linecap="round"/>
+    ${h.top}
+  </svg>`;
+}
+
+/* ---------- 背景：城市剪影 / 风线 / 云 ---------- */
+function skyline(color,seed){
+  let x=0,r='';let s=seed;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
+  while(x<700){const w=30+rnd()*50,h=40+rnd()*100;r+=`<rect x="${x}" y="${170-h}" width="${w}" height="${h}" fill="${color}"/>`;
+    if(rnd()>.5)r+=`<rect x="${x+w/2-3}" y="${170-h-18}" width="6" height="18" fill="${color}"/>`;x+=w+rnd()*8}
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='700' height='170' viewBox='0 0 700 170'>${r}</svg>`)}")`;
+}
+document.getElementById('cityFar').style.backgroundImage=skyline('#1e3a8a',7);
+document.getElementById('cityNear').style.backgroundImage=skyline('#0f172a',21);
+document.getElementById('cityFar').style.backgroundSize='700px 100%';
+document.getElementById('cityNear').style.backgroundSize='700px 100%';
+if(!reduce){
+  const bg=document.getElementById('bg');
+  for(let i=0;i<16;i++){const w=document.createElement('div');w.className='wind';
+    w.style.cssText=`top:${rand(4,92)}%;width:${rand(120,340)}px;animation-duration:${rand(.45,1.1)}s;animation-delay:${-rand(0,1)}s`;bg.appendChild(w)}
+  for(let i=0;i<4;i++){const c=document.createElement('div');c.className='cloud';
+    c.style.cssText=`top:${rand(8,60)}%;animation-duration:${rand(14,26)}s;animation-delay:${-rand(0,20)}s;transform:scale(${rand(.7,1.5)})`;bg.appendChild(c)}
+}
+
+/* ---------- 特效工具 ---------- */
+const COLORS=['#ffd23f','#ff6b6b','#ffffff','#38bdf8','#a78bfa','#fb923c'];
+function add(el,ms){fx.appendChild(el);setTimeout(()=>el.remove(),ms)}
+function spark(x,y,big){const s=document.createElement('i');s.className='spark';const a=rand(0,6.283),d=big?rand(60,170):rand(12,45);
+  s.style.cssText=`left:${x}px;top:${y}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;--c:${pick(COLORS)};--z:${big?rand(10,22):rand(5,11)}px`;add(s,700)}
+function ghost(x,y,size,color){const g=document.createElement('div');g.className='ghost';
+  g.style.cssText=`left:${x}px;top:${y}px;width:${size*.5}px;height:${size*.5}px;background:radial-gradient(circle,${color},transparent 70%)`;add(g,520)}
+function ring(x,y){const r=document.createElement('div');r.className='ring';r.style.cssText=`left:${x}px;top:${y}px`;add(r,650)}
+function pop(txt,x,y,fs){const p=document.createElement('div');p.className='pop';p.textContent=txt;
+  p.style.cssText=`left:${x}px;top:${y}px;--r:${rand(-14,14)}deg;--fs:${fs||rand(1.8,3)}rem`;add(p,850)}
+function banner(txt){const b=document.createElement('div');b.className='banner';b.textContent=txt;add(b,1700)}
+function impact(x,y){
+  ring(x,y);setTimeout(()=>ring(x,y),120);
+  for(let i=0;i<22;i++)spark(x,y,true);
+  pop(pick(['BOOM!','KAPOW!','BAM!','科学!']),x,y-30,3.2);
+  cta.classList.remove('hit');void cta.offsetWidth;cta.classList.add('hit');
+  stage.classList.remove('shake');void stage.offsetWidth;stage.classList.add('shake');
+}
+
+/* ---------- 飞行（任务式） ---------- */
+let active=0,deployed=0;
+const countEl=document.getElementById('count'),meterEl=document.getElementById('meter');
+function bumpHud(){deployed++;countEl.textContent='DEPLOYED '+String(deployed).padStart(3,'0');meterEl.style.width=((deployed%12)/12*100)+'%'}
+const missions=['MISSION 01 · 召集小科学家','MISSION 02 · 带上你的发明','MISSION 03 · 点击按钮报名！','MISSION 04 · 守护科学展'];
+let mi=0;setInterval(()=>{mi=(mi+1)%missions.length;document.getElementById('mission').textContent=missions[mi]},3500);
+
+function track(el,h,size,dir,anim){
+  let last=0,lastG=0;
+  (function loop(t){
+    if(anim.playState==='finished'||anim.playState==='idle')return;
+    if(t-last>30){last=t;
+      const r=el.getBoundingClientRect(),s=stage.getBoundingClientRect();
+      const x=r.left-s.left+r.width/2-dir*r.width*.35,y=r.top-s.top+r.height/2;
+      if(x>-40&&x<s.width+40){spark(x,y);if(t-lastG>85){lastG=t;ghost(x,y,size,h.suit)}}
+    }
+    requestAnimationFrame(loop);
+  })(performance.now());
+}
+
+function launch(o={}){
+  if(active>=11||document.hidden)return;
+  const W=stage.clientWidth,H=stage.clientHeight,mob=W<640;
+  const dir=o.dir??(Math.random()<.65?1:-1);
+  const h=o.hero||pick(heroes);
+  const size=(o.size||rand(95,150))*(mob?.7:1);
+  const dur=(o.dur||rand(1.8,3.4))*1000;
+  const pattern=o.pattern||pick(['straight','zig','swoop','loop','strike','strike']);
+  const base=(o.y??rand(.1,.78)*H);
+  const sw=Math.random()<.5?1:-1;
+  const bt=cta.getBoundingClientRect(),sr=stage.getBoundingClientRect();
+  const tx=bt.left-sr.left+bt.width/2,ty=bt.top-sr.top+bt.height/2;
+
+  const el=document.createElement('div');el.className='flyer';el.style.width=size+'px';
+  el.innerHTML=`<div class="flip ${dir<0?'rev':''}"><div class="streak"></div>${heroSVG(h)}</div>`;
+  sky.appendChild(el);active++;bumpHud();
+
+  const N=56,P=[];
+  for(let i=0;i<=N;i++){
+    const t=i/N;
+    let x=dir>0?-size-80+(W+size*2+160)*t:W+80-(W+size*2+160)*t,y=base;
+    if(pattern==='zig')y=base+Math.sin(t*Math.PI*4)*H*.09;
+    else if(pattern==='swoop')y=base+Math.sin(t*Math.PI)*H*.24*sw;
+    else if(pattern==='loop'&&t>.38&&t<.62){const th=(t-.38)/.24*Math.PI*2,r=size*.6;x+=dir*r*Math.sin(th);y=base-r*(1-Math.cos(th))}
+    else if(pattern==='strike'){
+      const tx2=tx-size/2,ty2=ty-size*.4,sx=tx2-dir*(W*.5+size+80),ex=tx2+dir*(W*.5+size+80);
+      x=sx+(ex-sx)*t;
+      y=t<.5?ty2+((o.fromY??-.05*H)-ty2)*Math.pow(1-t/.5,2):ty2-Math.pow((t-.5)/.5,2)*H*.75;
+    }
+    P.push([x,y]);
+  }
+  // 朝向角（连续展开，避免翻圈时跳变）
+  let prev=0;const A=P.map((p,i)=>{
+    const a=P[Math.min(i+1,N)],b=P[Math.max(i-1,0)];
+    let ang=Math.atan2(a[1]-b[1],(a[0]-b[0])*dir)*180/Math.PI;
+    while(ang-prev>180)ang-=360;while(prev-ang>180)ang+=360;prev=ang;
+    return pattern==='loop'?ang:Math.max(-65,Math.min(65,ang));
+  });
+  const kf=P.map((p,i)=>({transform:`translate(${p[0]}px,${p[1]}px) rotate(${A[i]*dir}deg)`}));
+  const anim=el.animate(kf,{duration:dur,easing:'linear',fill:'forwards'});
+  track(el,h,size,dir,anim);
+  if(pattern==='strike')setTimeout(()=>impact(tx,ty),dur*.5);
+  else if(Math.random()<.5)setTimeout(()=>{const r=el.getBoundingClientRect();pop(pick(['WHOOSH!','ZAP!','ZOOM!','FWOOSH!']),r.left-sr.left+r.width/2,r.top-sr.top-20)},dur*rand(.25,.6));
+  anim.onfinish=()=>{el.remove();active--};
+}
+
+/* ---------- 编队 ---------- */
+let lastSquad=0;
+function squad(){
+  const now=Date.now();if(now-lastSquad<3500)return;lastSquad=now;
+  const H=stage.clientHeight,dir=Math.random()<.7?1:-1,y0=rand(.25,.55)*H,size=rand(105,125),dur=rand(2.2,2.8);
+  banner('SQUAD ASSEMBLE! 集结！');
+  [0,-1,1,-2,2].forEach((off,i)=>setTimeout(()=>launch({dir,y:y0+off*size*.62,size,dur,pattern:'straight',hero:heroes[i%heroes.length]}),Math.abs(off)*200));
+}
+
+/* ---------- 启动 ---------- */
+if(reduce){
+  heroes.forEach(h=>{const d=document.createElement('div');d.className='flyer';d.style.width='110px';d.innerHTML=`<div class="flip">${heroSVG(h)}</div>`;sky.appendChild(d)});
+}else{
+  for(let i=0;i<4;i++)setTimeout(()=>launch(),i*350);
+  setInterval(()=>{launch();if(Math.random()<.45)setTimeout(()=>launch(),rand(150,350))},650);
+  setInterval(squad,11000);setTimeout(squad,3000);
+  cta.addEventListener('mouseenter',squad);
+}
+cta.addEventListener('click',()=>{const b=cta.getBoundingClientRect(),s=stage.getBoundingClientRect();
+  const x=b.left-s.left+b.width/2,y=b.top-s.top+b.height/2;ring(x,y);for(let i=0;i<30;i++)spark(x,y,true);pop('GO!',x,y-40,3.4)});
+</script>
+</body>
+</html>
